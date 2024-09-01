@@ -1,0 +1,14 @@
+{
+    "builds": [
+        {
+            "src": "instascraper/wsgi.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "instascraper/wsgi.py"
+        }
+    ]
+}
