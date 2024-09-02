@@ -22,23 +22,8 @@ def download_image(url):
         raise Exception(f"Failed to download image. Status code: {response.status_code}")
 
 def extract_text_from_image(image):
-    # Use pytesseract to extract text
-    text = pytesseract.image_to_string(image)
+    text = re.sub(r'[^a-zA-Z\s]', '', pytesseract.image_to_string(image).replace('\n', ' ').replace('|', 'I').replace('-', ''))
     
-    # Replace line breaks and unwanted symbols
-    text = text.replace('\n', ' ').replace("'", "")
-    
-    # Join multiple spaces into a single space
-    text = " ".join(text.split())
-    
-    # Replace vertical bars with the letter 'I'
-    text = text.replace('|', 'I')
-    text = text.replace('-', '')
-    
-    # Filter out non-alphabetic symbols but keep spaces
-    text = re.sub(r'[^a-zA-Z\s]', '', text)
-    
-    # Define allowed 2-4 letter words
     allowed_short_words = {'the', 'and', 'for', 'are', 'but', 'not', 'you', 'his', 'her', 
                            'she', 'him', 'has', 'can', 'was', 'had', 'all', 'our', 'out',
                            'use', 'one', 'two', 'get', 'see', 'new', 'day', 'any', 'now',
@@ -46,23 +31,13 @@ def extract_text_from_image(image):
                            'from', 'were', 'they', 'been', 'will', 'them', 'more', 'when',
                            'what', 'make', 'like', 'such', 'self', 'care'}
     
-    # Split the text into words
     words = text.split()
-    
-    # Filter non-word tokens but keep allowed short words
     meaningful_words = [word for word in words if len(word) > 4 or word.lower() in allowed_short_words]
-
-    allow = False
-    lowercase = len([word for word in meaningful_words if word.lower()])
-    print(lowercase)
-
-    if lowercase >= 3:
-        filtered_text = " ".join(meaningful_words)
-    else:
-        filtered_text = " ".join([word for word in meaningful_words if word.upper()])
     
-    return filtered_text
-
+    if sum(1 for word in meaningful_words if word.islower()) >= 3:
+        return " ".join(meaningful_words)
+    
+    return " ".join(word for word in meaningful_words if word.isupper())
 
 class ScrapeAndExtractView(View):
     def get(self, request, username, max_posts):
