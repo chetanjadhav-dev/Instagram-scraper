@@ -24,13 +24,19 @@ def download_image(url):
 def extract_text_from_image(image):
     text = re.sub(r'[^a-zA-Z\s]', '', pytesseract.image_to_string(image).replace('\n', ' ').replace('|', 'I').replace('-', ''))
     
-    allowed_short_words = {'the', 'and', 'for', 'are', 'but', 'not', 'you', 'his', 'her', 
-                           'she', 'him', 'has', 'can', 'was', 'had', 'all', 'our', 'out',
-                           'use', 'one', 'two', 'get', 'see', 'new', 'day', 'any', 'now',
-                           'man', 'men', 'too', 'may', 'own', 'hold', 'this', 'that', 'with', 'have',
-                           'from', 'were', 'they', 'been', 'will', 'them', 'more', 'when',
-                           'what', 'make', 'like', 'such', 'self', 'care'}
-    
+    allowed_short_words = {
+    'the', 'and', 'for', 'are', 'but', 'not', 'you', 'his', 'her', 
+    'she', 'him', 'has', 'can', 'was', 'had', 'all', 'our', 'out',
+    'use', 'one', 'two', 'get', 'see', 'new', 'day', 'any', 'now',
+    'man', 'men', 'too', 'may', 'own', 'hold', 'this', 'that', 'with', 'have',
+    'from', 'were', 'they', 'been', 'will', 'them', 'more', 'when',
+    'what', 'make', 'like', 'such', 'self', 'care', 'very', 'much', 'just',
+    'know', 'then', 'some', 'take', 'work', 'give', 'come', 'say', 'go', 
+    'way', 'back', 'now', 'how', 'each', 'most', 'each', 'those', 'many', 
+    'only', 'such', 'than', 'its', 'or', 'now', 'her', 'his', 'my', 'our',
+    'who', 'why', 'can', 'let', 'off', 'own', 'way', 'had', 'need', 'few',
+    'out', 'own', 'give', 'made', 'same', 'into', 'down', 'been', 'ever'}
+
     words = text.split()
     meaningful_words = [word for word in words if len(word) > 4 or word.lower() in allowed_short_words]
     
