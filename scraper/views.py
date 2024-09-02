@@ -26,26 +26,6 @@ def extract_text_from_image(image):
     text = ",".join(text.split('  ')[:-1]).replace("\'", "").replace('|', 'I')
     return text
 
-import easyocr
-from PIL import Image
-import io
-
-def extract_text_from_image(image):
-    reader = easyocr.Reader(['en'])  # You can specify other languages if needed
-
-    # Convert PIL Image to bytes
-    image_byte_arr = io.BytesIO()
-    image.save(image_byte_arr, format='PNG')
-    content = image_byte_arr.getvalue()
-
-    # Perform OCR
-    results = reader.readtext(content)
-    
-    # Extract text
-    extracted_text = ' '.join([result[1] for result in results])
-    return extracted_text
-
-
 class ScrapeAndExtractView(View):
     def get(self, request, username, max_posts):
         try:
